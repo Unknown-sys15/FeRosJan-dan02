@@ -71,36 +71,50 @@ if __name__ == '__main__':
     
     
     
-    #raw_input("Press Enter")
+    raw_input("Press Enter")
     #pose_goal = Pose(
      #   position=current_transform.transform.translation, orientation=current_transform.transform.rotation)
     #pose_goal.position.z += 0.1
-
-# Convert it to pose and send it to the robot
+    
+    #TOCKA1
+    target_transform = current_transform#copy()
+    target_transform.transform.translation.z +=0.15
+    target_transform.child_frame_id = 'target_offset'
+    # Publish the frame and give the broadcaster some time
+    tf_broadcaster.sendTransform(target_transform)
+    rospy.sleep(0.5)
+    # premakni se 15 cm nad target_1
     pose_goal = Pose(
     position=current_transform.transform.translation, orientation=current_transform.transform.rotation)
     moveit_interface.go(pose_goal, wait=True)
 
-    target_transform = current_transform#copy()
-    target_transform.transform.translation.z +=0.1
-    target_transform.child_frame_id = 'target_offset'
+    #Relativni premik
+    moveit_interface.shift_pose_target(2, -0.15)
+    moveit_interface.execute(moveit_interface.plan(), wait=True)
 
-    # Publish the frame and give the broadcaster some time
-    tf_broadcaster.sendTransform(target_transform)
-    rospy.sleep(0.5)
+    moveit_interface.set_max_velocity_scaling_factor(0.01)
+    moveit_interface.set_max_acceleration_scaling_factor(0.01)
+    moveit_interface.shift_pose_target(2, -0.05)
+    moveit_interface.execute(moveit_interface.plan(), wait=True)
+
+    moveit_interface.set_max_velocity_scaling_factor(1)
+    moveit_interface.set_max_acceleration_scaling_factor(0.1)
+    moveit_interface.shift_pose_target(2, 0.2)
+    moveit_interface.execute(moveit_interface.plan(), wait=True)
+
 
     # Now lookup the transform from the robot's base to the target offset
-    offset_transform = tf_buffer.lookup_transform(
-    'base_link',
-    'target_offset',
-    rospy.Time(0)
-    )
+    #offset_transform = tf_buffer.lookup_transform(
+    #'base_link',
+    #'target_offset',
+    #rospy.Time(0)
+    #)
     
 
     # Convert it to pose and send it to the robot
-    pose_goal = Pose(
-    position=offset_transform.transform.translation, orientation=offset_transform.transform.rotation)
-    moveit_interface.go(pose_goal, wait=True)
+    #pose_goal = Pose(
+    #position=offset_transform.transform.translation, orientation=offset_transform.transform.rotation)
+    #moveit_interface.go(pose_goal, wait=True)
 
     
 
