@@ -33,8 +33,8 @@ if __name__ == '__main__':
     transformation = tf_buffer.lookup_transform(saved_frames[1], saved_frames[2], rospy.Time(0))
     saved_data[raw_input("Ime transformacije: ")] = transformation
 
-    transformation = tf_buffer.lookup_transform(saved_frames[0], saved_frames[2], rospy.Time(0))
-    saved_data[raw_input("Ime transformacije: ")] = transformation
+    #transformation = tf_buffer.lookup_transform(saved_frames[0], saved_frames[2], rospy.Time(0))
+    #saved_data[raw_input("Ime transformacije: ")] = transformation
     # Note - from_frame and to_frame need to be defined!
 
 
